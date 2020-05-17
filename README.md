@@ -1,4 +1,5 @@
 # Get hash of data model in compile time
+![XUnit tests](https://github.com/Nov1kov/Get-hash-of-data-model/workflows/XUnit%20tests/badge.svg)
 
 ## Motivation
 
