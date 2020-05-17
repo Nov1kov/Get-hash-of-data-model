@@ -1,4 +1,6 @@
-# Motivation
+# Get hash of data model in compile time
+
+## Motivation
 
 Чтобы использовать [сериализацию](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/serialization/#binary-and-xml-serialization) для хранения кеша в приложение. Необходимо поддерживать совместимость между вресиями.
 
@@ -8,7 +10,7 @@
 
 # implementation options
 
-## SharpObjectGenerator
+## Generate C# object
 
 - Create object by model.
 - Get hashcode of object.
@@ -21,6 +23,7 @@
 - [AutoBogus](https://github.com/nickdodd79/AutoBogus) - object generator by adding auto creation 
 - [DeepEqual](https://github.com/jamesfoster/DeepEqual) - for test equals of objects 
 
+### example
 ```c#
 objectGenerator = new ObjectGenerator();
 
@@ -34,3 +37,13 @@ var model = _objectGenerator.Generate<ModelWithAbstraction>();
 // serialize to bytes and get hashcode
 var hash = objectGenerator.GetHash()); // 177346035
 ```
+
+## Get hashcode from every field
+
+- Get hashcode of each object field.
+
+### restrictions
+- Each time object creation must be the same.
+- Every implementation of abstraction must be set.
+
+todo
