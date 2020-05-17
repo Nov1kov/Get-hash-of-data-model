@@ -1,15 +1,19 @@
+using System;
 using System.Collections.Generic;
 
 namespace SharpObjectGenerator.Models
 {
+    [Serializable]
     public class Model
     {
         public int Int1 { get; set; }
         public string Str1 { get; set; }
         public List<Item> SomeListItems { get; } = new List<Item>();
         public AnotherClass ClassField { get; set; }
+        [NonSerialized] public int IgnoreField;
     }
 
+    [Serializable]
     public class AnotherClass
     {
         private readonly int _id;
@@ -21,6 +25,7 @@ namespace SharpObjectGenerator.Models
         }
     }
 
+    [Serializable]
     public class Item
     {
         public double DoubleField { get; set; }

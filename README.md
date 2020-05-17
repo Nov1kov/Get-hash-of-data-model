@@ -20,3 +20,17 @@
 ### used
 - [AutoBogus](https://github.com/nickdodd79/AutoBogus) - object generator by adding auto creation 
 - [DeepEqual](https://github.com/jamesfoster/DeepEqual) - for test equals of objects 
+
+```c#
+objectGenerator = new ObjectGenerator();
+
+// set specific implementations to abstact item         
+objectGenerator.AddTypeMap<IItem, ItemImplOne>();
+objectGenerator.AddTypeMap<IItem, ItemImplTwo>();
+
+// generate object            
+var model = _objectGenerator.Generate<ModelWithAbstraction>();
+
+// serialize to bytes and get hashcode
+var hash = objectGenerator.GetHash()); // 177346035
+```

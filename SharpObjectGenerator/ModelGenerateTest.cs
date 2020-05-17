@@ -39,6 +39,9 @@ namespace SharpObjectGenerator
             Assert.True(model.ClassField.DecimalField > 0);
             Assert.True(model.SomeListItems[0].DoubleField > 0);
             Assert.True(model.SomeListItems[0].FloatField > 0);
+            
+            // ignore NoSerialize fields
+            Assert.Equal(0, model.IgnoreField);
         }
         
         [Fact]
@@ -51,6 +54,25 @@ namespace SharpObjectGenerator
 
             Assert.Contains(model.Items, i => i is ItemImplOne);
             Assert.Contains(model.Items, i => i is ItemImplTwo);
+        }
+        
+        [Fact]
+        public void ObjectWithAbstraction_GetHash_StaticHash()
+        {
+            _objectGenerator.AddTypeMap<IItem, ItemImplOne>();
+            _objectGenerator.AddTypeMap<IItem, ItemImplTwo>();
+            
+            var model = _objectGenerator.Generate<ModelWithAbstraction>();
+
+            Assert.Equal(177346035, _objectGenerator.GetHash());
+        }
+        
+        [Fact]
+        public void ObjectWithPrimitive_GetHash_StaticHash()
+        {
+            var model = _objectGenerator.Generate<Model>();
+
+            Assert.Equal(-1469613893, _objectGenerator.GetHash());
         }
     }
 }
