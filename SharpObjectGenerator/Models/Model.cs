@@ -6,14 +6,14 @@ namespace SharpObjectGenerator.Models
     {
         public int Int1 { get; set; }
         public string Str1 { get; set; }
-        public List<AnotherClass> InitListItems { get; } = new List<AnotherClass>();
-        public Item ClassField { get; set; }
+        public List<Item> SomeListItems { get; } = new List<Item>();
+        public AnotherClass ClassField { get; set; }
     }
 
     public class AnotherClass
     {
         private readonly int _id;
-        public string StrField1 { get; set; }
+        public decimal DecimalField { get; set; }
 
         public AnotherClass(int id)
         {
@@ -23,8 +23,8 @@ namespace SharpObjectGenerator.Models
 
     public class Item
     {
-        public double Double1 { get; set; }
-        public string StrField1 { get; set; }
+        public double DoubleField { get; set; }
+        public float FloatField { get; set; }
         private byte[] _bytes;
         public Item(byte[] bytes)
         {
