@@ -6,10 +6,8 @@ namespace SharpObjectGenerator.Models
     {
         public int Int1 { get; set; }
         public string Str1 { get; set; }
-
         public List<AnotherClass> InitListItems { get; } = new List<AnotherClass>();
-
-        public Item NestedItem { get; set; }
+        public Item ClassField { get; set; }
     }
 
     public class AnotherClass
@@ -27,5 +25,10 @@ namespace SharpObjectGenerator.Models
     {
         public double Double1 { get; set; }
         public string StrField1 { get; set; }
+        private byte[] _bytes;
+        public Item(byte[] bytes)
+        {
+            _bytes = bytes;
+        }
     }
 }
