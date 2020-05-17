@@ -104,8 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoBogusExtensions\PrimitiveGeneratorOverride.cs" />
+    <Compile Include="AutoBogusExtensions\SkipNoSerializeBinder.cs" />
+    <Compile Include="AutoBogusExtensions\TypeImplementationOverride.cs" />
+    <Compile Include="ObjectGenerator.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="ModelGenerateTest.cs" />
+    <Compile Include="Models\ModelWithAbstraction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

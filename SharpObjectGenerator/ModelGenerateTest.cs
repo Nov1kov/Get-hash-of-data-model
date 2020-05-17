@@ -1,4 +1,5 @@
-﻿using AutoBogus;
+﻿using System.Linq;
+using AutoBogus;
 using DeepEqual.Syntax;
 using SharpObjectGenerator.AutoBogusExtensions;
 using SharpObjectGenerator.Models;
@@ -8,13 +9,20 @@ namespace SharpObjectGenerator
 {
     public class ModelGenerateTest
     {
+        private readonly ObjectGenerator _objectGenerator;
+
+        public ModelGenerateTest()
+        {
+            _objectGenerator = new ObjectGenerator();
+        }
+        
         [Fact]
         public void TwoTimesCreate_DeepEqual()
         {
             var faker = AutoFaker.Create(builder => builder.WithOverride(new PrimitiveGeneratorOverride()));
 
-            var model1 = faker.Generate<Model>();
-            var model2 = faker.Generate<Model>();
+            var model1 = _objectGenerator.Generate<Model>();
+            var model2 = _objectGenerator.Generate<Model>();
 
             model1.WithDeepEqual(model2).SkipDefault<Item>().Assert();
         }
@@ -22,9 +30,7 @@ namespace SharpObjectGenerator
         [Fact]
         public void GenerateObject_NotEmptyFields()
         {
-            var faker = AutoFaker.Create(builder => builder.WithOverride(new PrimitiveGeneratorOverride()));
-
-            var model = faker.Generate<Model>();
+            var model = _objectGenerator.Generate<Model>();
             
             Assert.True(model.Int1 > 0);
             Assert.NotEmpty(model.Str1);
@@ -33,6 +39,18 @@ namespace SharpObjectGenerator
             Assert.True(model.ClassField.DecimalField > 0);
             Assert.True(model.SomeListItems[0].DoubleField > 0);
             Assert.True(model.SomeListItems[0].FloatField > 0);
+        }
+        
+        [Fact]
+        public void GenerateObject_ImplementAbstractions()
+        {
+            _objectGenerator.AddTypeMap<IItem, ItemImplOne>();
+            _objectGenerator.AddTypeMap<IItem, ItemImplTwo>();
+            
+            var model = _objectGenerator.Generate<ModelWithAbstraction>();
+
+            Assert.Contains(model.Items, i => i is ItemImplOne);
+            Assert.Contains(model.Items, i => i is ItemImplTwo);
         }
     }
 }
