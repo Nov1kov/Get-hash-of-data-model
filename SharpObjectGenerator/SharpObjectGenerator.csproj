@@ -34,6 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="AutoBogus, Version=2.8.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>packages\AutoBogus.2.8.1\lib\net40\AutoBogus.dll</HintPath>
       <Private>True</Private>
