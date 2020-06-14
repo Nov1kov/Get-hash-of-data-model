@@ -1,7 +1,7 @@
 using System;
 using AutoBogus;
 
-namespace SharpObjectGenerator.AutoBogusExtensions
+namespace ObjectGenerator.AutoBogusExtensions
 {
     public class PrimitiveGeneratorOverride : AutoGeneratorOverride
     {

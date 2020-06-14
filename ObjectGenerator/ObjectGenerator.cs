@@ -3,9 +3,9 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using AutoBogus;
-using SharpObjectGenerator.AutoBogusExtensions;
+using ObjectGenerator.AutoBogusExtensions;
 
-namespace SharpObjectGenerator
+namespace ObjectGenerator
 {
     public class ObjectGenerator
     {

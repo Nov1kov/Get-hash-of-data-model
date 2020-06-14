@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SharpObjectGenerator.Models
+namespace DataModel
 {
     [Serializable]
     public class Model

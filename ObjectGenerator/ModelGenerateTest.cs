@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using AutoBogus;
+﻿using AutoBogus;
+using DataModel;
 using DeepEqual.Syntax;
-using SharpObjectGenerator.AutoBogusExtensions;
-using SharpObjectGenerator.Models;
+using ObjectGenerator.AutoBogusExtensions;
 using Xunit;
 
-namespace SharpObjectGenerator
+namespace ObjectGenerator
 {
     public class ModelGenerateTest
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoBogus;
 
-namespace SharpObjectGenerator.AutoBogusExtensions
+namespace ObjectGenerator.AutoBogusExtensions
 {
     public class TypeImplementationOverride : AutoGeneratorOverride
     {

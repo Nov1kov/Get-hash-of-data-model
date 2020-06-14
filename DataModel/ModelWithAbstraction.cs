@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace SharpObjectGenerator.Models
+namespace DataModel
 {
     [Serializable]
     public class ModelWithAbstraction
@@ -16,7 +15,7 @@ namespace SharpObjectGenerator.Models
     }
 
     [Serializable]
-    class ItemImplTwo : IItem
+    public class ItemImplTwo : IItem
     {
         public string SomeStr { get; set; }
     }

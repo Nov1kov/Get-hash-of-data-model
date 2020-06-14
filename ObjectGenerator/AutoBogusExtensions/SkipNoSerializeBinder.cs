@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using AutoBogus;
 using Bogus.Platform;
 
-namespace SharpObjectGenerator.AutoBogusExtensions
+namespace ObjectGenerator.AutoBogusExtensions
 {
     public class SkipNoSerializeBinder : AutoBinder
     {
