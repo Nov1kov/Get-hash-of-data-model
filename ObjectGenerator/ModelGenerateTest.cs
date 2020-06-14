@@ -63,7 +63,7 @@ namespace ObjectGenerator
             
             var model = _objectGenerator.Generate<ModelWithAbstraction>();
 
-            Assert.Equal(177346035, _objectGenerator.GetHash());
+            Assert.Equal(1902941486, _objectGenerator.GetHash());
         }
         
         [Fact]
@@ -71,7 +71,7 @@ namespace ObjectGenerator
         {
             var model = _objectGenerator.Generate<Model>();
 
-            Assert.Equal(-1469613893, _objectGenerator.GetHash());
+            Assert.Equal(985548089, _objectGenerator.GetHash());
         }
     }
 }
