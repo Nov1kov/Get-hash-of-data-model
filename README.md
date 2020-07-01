@@ -44,9 +44,7 @@ var hash = objectGenerator.GetHash()); // 177346035
 - Get hashcode of each object name field.
 
 ### restrictions
-- Each time object creation must be the same.
-- Every implementation of abstraction must be set.
+- none
 
 todo
 - recursive objects
-- abstraction models

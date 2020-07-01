@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -8,6 +9,7 @@ namespace ClassHashCode
     public class ClassHashCode
     {
         private readonly Type _type;
+        private int _deep = 0;
         private const int ArrayConstHashModifier = -1254979452;
 
         private int _hashCode;
@@ -22,44 +24,66 @@ namespace ClassHashCode
             var hashCoder = new ClassHashCode(type);
             return hashCoder.Execute();
         }
-
+        
         private int Execute()
         {
-            var props = GetFields(_type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            Debug.WriteLine($"Getting hashCode of type: {_type.Name}");
+            return GetHashOfType(_type, false);
+        }
+
+        private int GetHashOfType(Type type, bool findSubClasses)
+        {
+            _deep += 1;
+            Debug.WriteLine(new string('\t', _deep) + $"type: {type.Name}");
+            
+            var subClasses = AppDomain.CurrentDomain.GetAssemblies().
+                SelectMany(s => s.GetTypes()).
+                Where(t => t.BaseType == type || t.GetInterfaces().Contains(type) && !t.IsInterface).ToList();
+            if (findSubClasses && subClasses.Any())
+            {
+                foreach (var subClass in subClasses)
+                {
+                    CombineHashCode(GetHashOfType(subClass, true));
+                }
+            }
+            
+            // is only collections interfaces?
+            if (type.IsInterface)
+            {
+                if (type.IsGenericType)
+                {
+                    foreach (var genericArgument in type.GetGenericArguments())
+                    {
+                        CombineHashCode(GetHashOfType(genericArgument, true));
+                    }   
+                }
+
+                _deep -= 1;
+                return _hashCode;
+            }
+            
+            var fields = GetFields(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .ToList();
 
-            foreach (var prop in props)
+            foreach (var field in fields)
             {
-                if (prop.GetCustomAttribute(typeof(NonSerializedAttribute)) != null)
+                if (field.GetCustomAttribute(typeof(NonSerializedAttribute)) != null)
                 {
                     continue;
                 }
-                
-                var propType = prop.FieldType;
-                
-                var isArray = propType.IsArray;
-                if (isArray)
-                {
-                    propType = propType.GetElementType();
-                    if (propType == null)
-                    {
-                        throw new Exception($"Wrong array without element: {prop.FieldType}");
-                    }
-                }
 
-                if (propType.GetCustomAttribute(typeof(SerializableAttribute)) == null)
-                {
-                    throw new Exception($"Not serializable attribute: {propType}");
-                }
+                var isArray = field.FieldType.IsArray;
+                var fieldType = GetFieldType(field);
 
-                if (IsDefaultSerializable(propType))
+                if (IsPrimitiveType(fieldType))
                 {
-                    var nameField = prop.Name;
+                    var nameField = field.Name;
+                    Debug.WriteLine(new string('\t', _deep) + $"\tfield: {nameField}");
                     CombineHashCode(GetDeterministicHashCode(nameField));
                 }
                 else
                 {
-                    CombineHashCode(Get(propType));
+                    CombineHashCode(GetHashOfType(fieldType, true));
                 }
 
                 if (isArray)
@@ -68,7 +92,24 @@ namespace ClassHashCode
                 }
             }
 
+            _deep -= 1;
             return _hashCode;
+        }
+
+        private static Type GetFieldType(FieldInfo field)
+        {
+            var fieldType = field.FieldType;
+            if (fieldType.IsArray)
+            {
+                return fieldType.GetElementType();
+            }
+
+            if (fieldType.GetCustomAttribute(typeof(SerializableAttribute)) == null && !fieldType.IsInterface)
+            {
+                throw new Exception($"Not serializable attribute: {fieldType}");
+            }
+
+            return fieldType;
         }
 
         private void CombineHashCode(int hash)
@@ -99,9 +140,9 @@ namespace ClassHashCode
             }
         }
 
-        private static bool IsDefaultSerializable(Type propType)
+        private static bool IsPrimitiveType(Type fieldType)
         {
-            return propType.IsPrimitive || propType == typeof(string) || propType.IsEnum;
+            return fieldType.IsPrimitive || fieldType == typeof(string) || fieldType == typeof(decimal) || fieldType.IsEnum;
         }
         
         private static IEnumerable<FieldInfo> GetFields(
