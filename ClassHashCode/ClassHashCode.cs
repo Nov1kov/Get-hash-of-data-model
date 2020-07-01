@@ -8,8 +8,9 @@ namespace ClassHashCode
 {
     public class ClassHashCode
     {
+        private ISet<Type> _checkedTypes = new HashSet<Type>();
         private readonly Type _type;
-        private int _deep = 0;
+        private int _deep;
         private const int ArrayConstHashModifier = -1254979452;
 
         private int _hashCode;
@@ -22,19 +23,27 @@ namespace ClassHashCode
         public static int Get(Type type)
         {
             var hashCoder = new ClassHashCode(type);
-            return hashCoder.Execute();
+            hashCoder.Execute();
+            return hashCoder._hashCode;
         }
         
-        private int Execute()
+        private void Execute()
         {
             Debug.WriteLine($"Getting hashCode of type: {_type.Name}");
-            return GetHashOfType(_type, false);
+            CombineWithType(_type, false);
         }
 
-        private int GetHashOfType(Type type, bool findSubClasses)
+        private void CombineWithType(Type type, bool findSubClasses)
         {
             _deep += 1;
             Debug.WriteLine(new string('\t', _deep) + $"type: {type.Name}");
+
+            if (_checkedTypes.Contains(type))
+            {
+                _deep -= 1;
+                return;
+            }
+            _checkedTypes.Add(type);
             
             var subClasses = AppDomain.CurrentDomain.GetAssemblies().
                 SelectMany(s => s.GetTypes()).
@@ -43,7 +52,7 @@ namespace ClassHashCode
             {
                 foreach (var subClass in subClasses)
                 {
-                    CombineHashCode(GetHashOfType(subClass, true));
+                    CombineWithType(subClass, true);
                 }
             }
             
@@ -54,12 +63,12 @@ namespace ClassHashCode
                 {
                     foreach (var genericArgument in type.GetGenericArguments())
                     {
-                        CombineHashCode(GetHashOfType(genericArgument, true));
+                        CombineWithType(genericArgument, true);
                     }   
                 }
 
                 _deep -= 1;
-                return _hashCode;
+                return;
             }
             
             var fields = GetFields(type, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -74,18 +83,16 @@ namespace ClassHashCode
 
                 var isArray = field.FieldType.IsArray;
                 var fieldType = GetFieldType(field);
-
-                if (IsPrimitiveType(fieldType))
+                
+                var nameField = field.Name;
+                Debug.WriteLine(new string('\t', _deep) + $"\tfield: {nameField}");
+                CombineHashCode(GetDeterministicHashCode(nameField));
+                
+                if (!IsPrimitiveType(fieldType))
                 {
-                    var nameField = field.Name;
-                    Debug.WriteLine(new string('\t', _deep) + $"\tfield: {nameField}");
-                    CombineHashCode(GetDeterministicHashCode(nameField));
+                    CombineWithType(fieldType, true);
                 }
-                else
-                {
-                    CombineHashCode(GetHashOfType(fieldType, true));
-                }
-
+                
                 if (isArray)
                 {
                     CombineHashCode(ArrayConstHashModifier);
@@ -93,7 +100,7 @@ namespace ClassHashCode
             }
 
             _deep -= 1;
-            return _hashCode;
+            return;
         }
 
         private static Type GetFieldType(FieldInfo field)

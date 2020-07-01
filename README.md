@@ -47,4 +47,4 @@ var hash = objectGenerator.GetHash()); // 177346035
 - none
 
 todo
-- recursive objects
+- Non sensitive to primitive types in generic types

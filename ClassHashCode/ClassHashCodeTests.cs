@@ -15,15 +15,21 @@ namespace ClassHashCode
         }
 
         [Fact]
-        public void ModelWithIgnoreField_StaticHashCode()
+        public void Model_IgnoreField_StaticHashCode()
         {
-            Assert.Equal(-321864352, ClassHashCode.Get(typeof(Model)));
+            Assert.Equal(-1990839252, ClassHashCode.Get(typeof(Model)));
         }
 
         [Fact]
-        public void ModelWithAbstract_StaticHashCode()
+        public void Model_Abstract_StaticHashCode()
         {
-            Assert.Equal(176586752, ClassHashCode.Get(typeof(ModelWithAbstraction)));
+            Assert.Equal(-1343364564, ClassHashCode.Get(typeof(ModelWithAbstraction)));
+        }
+
+        [Fact]
+        public void Model_Recursive_StaticHashCode()
+        {
+            Assert.Equal(617865651, ClassHashCode.Get(typeof(ModelRecursive)));
         }
     }
 }
