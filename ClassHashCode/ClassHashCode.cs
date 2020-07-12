@@ -11,7 +11,6 @@ namespace ClassHashCode
         private ISet<Type> _checkedTypes = new HashSet<Type>();
         private readonly Type _type;
         private int _deep;
-        private const int ArrayConstHashModifier = -1254979452;
 
         private int _hashCode;
 
@@ -54,6 +53,7 @@ namespace ClassHashCode
             {
                 foreach (var subClass in subClasses)
                 {
+                    Console.WriteLine($"Found subclass for {type} - {subClass}");
                     CombineWithType(subClass, true);
                 }
             }
@@ -83,7 +83,6 @@ namespace ClassHashCode
                     continue;
                 }
 
-                var isArray = field.FieldType.IsArray;
                 var fieldType = GetFieldType(field);
                 
                 var nameField = field.Name;
@@ -94,12 +93,6 @@ namespace ClassHashCode
                 {
                     CombineWithType(fieldType, true);
                 }
-                
-                // NOTE: not elegant!
-                if (isArray)
-                {
-                    CombineHashCode(ArrayConstHashModifier);
-                }
             }
 
             _deep -= 1;
@@ -109,15 +102,11 @@ namespace ClassHashCode
         private static Type GetFieldType(FieldInfo field)
         {
             var fieldType = field.FieldType;
-            if (fieldType.IsArray)
-            {
-                return fieldType.GetElementType();
-            }
 
             if (fieldType.GetCustomAttribute(typeof(SerializableAttribute)) == null && !fieldType.IsInterface)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("Not serializable attribute for type: {fieldType}, in field: {field.Name}");
+                Console.WriteLine($"Not serializable attribute for type: {fieldType}, in field: {field.Name}");
                 Console.ResetColor();
             }
 

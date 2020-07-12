@@ -17,7 +17,7 @@ namespace ClassHashCode
         [Fact]
         public void Model_IgnoreField_StaticHashCode()
         {
-            Assert.Equal(806864982, ClassHashCode.Get(typeof(Model)));
+            Assert.Equal(-1747574523, ClassHashCode.Get(typeof(Model)));
         }
 
         [Fact]
