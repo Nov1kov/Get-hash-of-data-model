@@ -27,6 +27,15 @@ namespace ObjectGenerator
         }
 
         [Fact]
+        public void Serialize_Dict()
+        {
+            var model = _objectGenerator.Generate<ModelPrimitiveGeneric>();
+            var hash = _objectGenerator.GetHash();
+            
+            
+        }
+
+        [Fact]
         public void GenerateObject_NotEmptyFields()
         {
             var model = _objectGenerator.Generate<Model>();

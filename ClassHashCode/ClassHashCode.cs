@@ -38,12 +38,14 @@ namespace ClassHashCode
             _deep += 1;
             Debug.WriteLine(new string('\t', _deep) + $"type: {type.Name}");
 
-            if (_checkedTypes.Contains(type))
+            if (IsTheSameType(type))
             {
                 _deep -= 1;
                 return;
             }
-            _checkedTypes.Add(type);
+            
+            var fullName = type.FullName;
+            CombineHashCode(GetDeterministicHashCode(fullName));
             
             var subClasses = AppDomain.CurrentDomain.GetAssemblies().
                 SelectMany(s => s.GetTypes()).
@@ -55,18 +57,18 @@ namespace ClassHashCode
                     CombineWithType(subClass, true);
                 }
             }
+
+            if (type.IsGenericType)
+            {
+                foreach (var genericArgument in type.GetGenericArguments())
+                {
+                    CombineWithType(genericArgument, true);
+                }   
+            }
             
             // is only collections interfaces?
             if (type.IsInterface)
             {
-                if (type.IsGenericType)
-                {
-                    foreach (var genericArgument in type.GetGenericArguments())
-                    {
-                        CombineWithType(genericArgument, true);
-                    }   
-                }
-
                 _deep -= 1;
                 return;
             }
@@ -93,6 +95,7 @@ namespace ClassHashCode
                     CombineWithType(fieldType, true);
                 }
                 
+                // NOTE: not elegant!
                 if (isArray)
                 {
                     CombineHashCode(ArrayConstHashModifier);
@@ -113,10 +116,23 @@ namespace ClassHashCode
 
             if (fieldType.GetCustomAttribute(typeof(SerializableAttribute)) == null && !fieldType.IsInterface)
             {
-                throw new Exception($"Not serializable attribute: {fieldType}");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("Not serializable attribute for type: {fieldType}, in field: {field.Name}");
+                Console.ResetColor();
             }
 
             return fieldType;
+        }
+        
+        private bool IsTheSameType(Type type)
+        {
+            if (_checkedTypes.Contains(type))
+            {
+                return true;
+            }
+            
+            _checkedTypes.Add(type);
+            return false;
         }
 
         private void CombineHashCode(int hash)

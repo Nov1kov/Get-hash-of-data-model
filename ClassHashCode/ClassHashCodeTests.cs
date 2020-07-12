@@ -17,19 +17,27 @@ namespace ClassHashCode
         [Fact]
         public void Model_IgnoreField_StaticHashCode()
         {
-            Assert.Equal(-1990839252, ClassHashCode.Get(typeof(Model)));
+            Assert.Equal(806864982, ClassHashCode.Get(typeof(Model)));
         }
 
         [Fact]
         public void Model_Abstract_StaticHashCode()
         {
-            Assert.Equal(-1343364564, ClassHashCode.Get(typeof(ModelWithAbstraction)));
+            Assert.Equal(-1437521649, ClassHashCode.Get(typeof(ModelWithAbstraction)));
         }
 
         [Fact]
         public void Model_Recursive_StaticHashCode()
         {
-            Assert.Equal(617865651, ClassHashCode.Get(typeof(ModelRecursive)));
+            Assert.Equal(2053293150, ClassHashCode.Get(typeof(ModelRecursive)));
+        }
+        
+        [Fact]
+        public void Model_PrimitiveGeneric_NotEquals()
+        {
+            var intStringDict = ClassHashCode.Get(typeof(ModelPrimitiveGeneric));
+            var longStringDict = ClassHashCode.Get(typeof(ModelPrimitiveGeneric2));
+            Assert.NotEqual(intStringDict, longStringDict);
         }
     }
 }
