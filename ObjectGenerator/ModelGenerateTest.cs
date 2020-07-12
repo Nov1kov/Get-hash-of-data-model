@@ -18,8 +18,6 @@ namespace ObjectGenerator
         [Fact]
         public void TwoTimesCreate_DeepEqual()
         {
-            var faker = AutoFaker.Create(builder => builder.WithOverride(new PrimitiveGeneratorOverride()));
-
             var model1 = _objectGenerator.Generate<Model>();
             var model2 = _objectGenerator.Generate<Model>();
 
@@ -29,10 +27,13 @@ namespace ObjectGenerator
         [Fact]
         public void Serialize_Dict()
         {
-            var model = _objectGenerator.Generate<ModelPrimitiveGeneric>();
-            var hash = _objectGenerator.GetHash();
+            _objectGenerator.Generate<ModelPrimitiveGeneric1>();
+            var hash1 = _objectGenerator.GetHash();
             
+            _objectGenerator.Generate<ModelPrimitiveGeneric2>();
+            var hash2 = _objectGenerator.GetHash();
             
+            Assert.NotEqual(hash1, hash2);
         }
 
         [Fact]

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DataModel
 {
     [Serializable]
-    public class ModelPrimitiveGeneric
+    public class ModelPrimitiveGeneric1
     {
         public Dictionary<int, string> Dictionary { get; }
     }

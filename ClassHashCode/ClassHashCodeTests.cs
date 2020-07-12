@@ -35,7 +35,7 @@ namespace ClassHashCode
         [Fact]
         public void Model_PrimitiveGeneric_NotEquals()
         {
-            var intStringDict = ClassHashCode.Get(typeof(ModelPrimitiveGeneric));
+            var intStringDict = ClassHashCode.Get(typeof(ModelPrimitiveGeneric1));
             var longStringDict = ClassHashCode.Get(typeof(ModelPrimitiveGeneric2));
             Assert.NotEqual(intStringDict, longStringDict);
         }
